@@ -29,33 +29,6 @@ RUN pecl config-set php_ini /etc/php/7.2/cli/php.ini \
 
 RUN yes '/opt/libv8-6.6/' | pecl install v8js
 
-# Install packages and PHP extensions
-#RUN apt-get update \
-#    && apt-get upgrade -y \
-#    && apt-get install  -y --no-install-recommends ca-certificates software-properties-common python-software-properties \
-#    && apt-get install -y tzdata \
-#    && LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php \
-#    && LC_ALL=C.UTF-8 add-apt-repository ppa:pinepain/libv8 \
-#    && apt-get update \
-#    && apt-get install --no-install-recommends -y \
-#           wget curl openssl build-essential \
-#           php7.2 php-pear php7.2-cli php7.2-fpm php7.2-apcu php7.2-bcmath php7.2-common php7.2-curl php7.2-igbinary \
-#           php7.2-intl php7.2-json php7.2-mbstring php7.2-readline php7.2-redis php7.2-sqlite3 php7.2-xdebug php7.2-zip \
-#           php7.2-dev libv8-6.4 libv8-6.4-dev
-#
-## Install / compile v8js
-#RUN echo '/opt/libv8-6.4' | pecl install v8js \
-#    && mkdir -p /etc/php/7.2/mods-enabled \
-#    && echo 'extension=v8js.so' > /etc/php/7.2/mods-available/v8js.ini \
-#    && ln -s /etc/php/7.2/mods-available/v8js.ini /etc/php/7.2/cli/conf.d/20-v8js.ini \
-#    && ln -s /etc/php/7.2/mods-available/v8js.ini /etc/php/7.2/fpm/conf.d/20-v8js.ini
-#
-## Clean up apt
-#RUN apt-get -y autoremove \
-#    && apt-get clean all \
-#    && apt-get autoclean \
-#    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 # install composer into this container
 RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/da290238de6d63faace0343efbdd5aa9354332c5/web/installer \
  && php -r " \
@@ -69,13 +42,6 @@ RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/compos
  && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer  \
  && composer --ansi --version --no-interaction \
  && rm -rf /tmp/* /tmp/.htaccess
-
-# Configure and secure PHP
-# COPY src/Resources/docker/php-fpm/ubuntu/php-fpm.conf /etc/php/7.2/fpm/php-fpm.conf
-# COPY src/Resources/docker/php-fpm/ubuntu/www.conf /etc/php/7.2/fpm/pool.d/www.conf
-
-# setup custom PHP ini files
-# COPY src/Resources/docker/php-fpm/custom.ini /etc/php/7.2/mods-available/custom.ini
 
 # app will be mounted here, so set this as our working directory
 WORKDIR /app
