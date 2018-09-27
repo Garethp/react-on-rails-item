@@ -1,0 +1,5 @@
+{
+    "require": {
+        "limenius/react-renderer": "^2.1"
+    }
+}
